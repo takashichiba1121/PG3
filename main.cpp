@@ -5,74 +5,87 @@ using namespace std;
 
 //単方向リストの構造体の定義
 typedef struct CELL {
-	int returnDate;
-	int loanDate;
-	char name[20];
+	int val;
+	struct CELL* prev;
 	struct CELL* next;
 }CELL;
 
+//挿入したいセルのアドレスを取得
+CELL* getInswrtCellAddress(CELL* endCELL, int iterator);
 //データを追加する関数のプロトタイプ宣言
-void create(CELL* front,int loanDate,int returnDate, const char* name);
+void create(CELL* front, int val);
 //一覧を表示する関数のプロトタイプ宣言
 void index(CELL* front);
 
 int main(void)
 {
-	char name[]="YamadaTarou";
-	int loanDate;
-	int returnDate;
+	int val;
 	//先頭セルの宣言
-	CELL front;
-	front.next = nullptr;
+	CELL head;
+	head.val = 0;
+	head.next = nullptr;
+	head.prev = nullptr;
+	int iterator;
 
 	while (true) {
-		scanf_s("%s", name,20);
-		scanf_s("%d", &loanDate);
-		scanf_s("%d", &returnDate);
+		scanf_s("%d", &val);
+		scanf_s("%d", &iterator);
 
+		CELL* insertCell = getInswrtCellAddress(&head, iterator);
 
 		//最後尾にセルを追加
-		create(&front, loanDate, returnDate, name);
+		create(insertCell, val);
 
 		//リスト一覧の表示
-		index(&front);
+		index(&head);
 	}
 
 
 	return 0;
 }
 
+CELL* getInswrtCellAddress(CELL* endCELL, int iterator) {
+	for (int i = -0; i < iterator; i++)
+	{
+		if (endCELL->next) {
+			endCELL = endCELL->next;
+		}
+		else {
+			break;
+		}
+	}
+	return endCELL;
+}
+
 //データを追加する関数のプロトタイプ宣言
-void create(CELL* front, int loanDate, int returnDate, const char* name)
+void create(CELL* currentCell, int val)
 {
 	CELL* newSELL = nullptr;
 
 	//新規作成するセル分のメモリを確保する
 	newSELL = (CELL*)malloc(sizeof(CELL));
 
-	if (newSELL!=NULL)
-	{
-		strcpy_s(newSELL->name, 8, name);
-		newSELL->loanDate = loanDate;
-		newSELL->returnDate = returnDate;
-		newSELL->next = nullptr;
-	}
+	newSELL->val = val;
+	newSELL->prev = currentCell;
+	newSELL->next = nullptr;
 
-	//最後(最新)のセルのアドレスの一つ目の処理は引数から持ってきた
-	//リストのうち最初のセルのアドレスが該当する
-	while (front->next != nullptr) {
-		front = front->next;
+	if (currentCell->next) {
+		CELL* nextCell = currentCell->next;
+		nextCell->prev = newSELL;
 	}
-	front->next = newSELL;
 }
 
 //一覧を表示する関数のプロトタイプ宣言
-void index(CELL* front) {
-	while (front->next != nullptr)
+void index(CELL* endCell) {
+	int no = 1;
+	while (endCell != nullptr)
 	{
-		front = front->next;
-		printf("氏名/%s\n", front->name);
-		printf("貸出日/%d\n", front->loanDate);
-		printf("返却日/%d\n", front->returnDate);
+		endCell = endCell->next;
+		printf("%d", no);
+		printf("%p", endCell->prev);
+		printf("%5d", endCell->val);
+		printf("(%p)", endCell);
+		printf("%p/n", endCell->next);
+		no++;
 	}
 }
