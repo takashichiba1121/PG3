@@ -5,7 +5,7 @@ using namespace std;
 
 //単方向リストの構造体の定義
 typedef struct CELL {
-	char* station;
+	char station[16];
 	struct CELL* prev;
 	struct CELL* next;
 }CELL;
@@ -23,21 +23,27 @@ void index(CELL* front);
 
 int main(void)
 {
-	char* station=nullptr;
+	char station[16];
 	//先頭セルの宣言
 	CELL head;
-	head.station;
+	strcpy_s(head.station, 16, "toukyou");
 	head.next = nullptr;
 	head.prev = nullptr;
 	int iterator;
-	scanf_s("%s", station,20);
-	scanf_s("%d", &iterator);
+	/*scanf_s("%d", &iterator);
 
-	CELL* insertCell = getInswrtCellAddress(&head, iterator);
+	CELL* insertCell = getInswrtCellAddress(&head, iterator);*/
 
-	//最後尾にセルを追加
-	create(insertCell, station);
-
+	////最後尾にセルを追加
+	//create(insertCell, station);
+	for (int i = 0; i < 5; i++)
+	{
+		scanf_s("%s", station, 16);
+		push_back(&head, station);
+	}
+	CELL* insertCell = getInswrtCellAddress(&head, 3);
+	scanf_s("%s", station, 16);
+	create(insertCell,station);
 	//リスト一覧の表示
 	index(&head);
 
@@ -58,8 +64,11 @@ CELL* getInswrtCellAddress(CELL* endCELL, int iterator) {
 }
 
 //データを追加する関数のプロトタイプ宣言
-void push_back(CELL* currentCell, char* station)
+void push_back(CELL* head, char* station)
 {
+	while (head->next != nullptr) {
+		head = head->next;
+	}
 	CELL* newSELL = nullptr;
 
 	//新規作成するセル分のメモリを確保する
@@ -67,49 +76,51 @@ void push_back(CELL* currentCell, char* station)
 
 	if (newSELL != NULL)
 	{
-		strcpy_s(newSELL->station,16, station);
-		newSELL->prev = currentCell;
+		strcpy_s(newSELL->station, 16, station);
+		newSELL->prev = head;
 		newSELL->next = nullptr;
 	}
 
-	if (currentCell->next) {
-		CELL* nextCell = currentCell->next;
-		nextCell->prev = newSELL;
-	}
+	//最後(最新)のセルのアドレスの一つ目の処理は引数から持ってきた
+	//リストのうち最初のセルのアドレスが該当する
+	head->next = newSELL;
 }
 
 //データを追加する関数のプロトタイプ宣言
 void create(CELL* currentCell, char* station)
 {
-	CELL* newSELL = nullptr;
+	CELL* newCELL = nullptr;
 
 	//新規作成するセル分のメモリを確保する
-	newSELL = (CELL*)malloc(sizeof(CELL));
+	newCELL = (CELL*)malloc(sizeof(CELL));
 
-	if (newSELL != NULL)
+	if (newCELL != NULL)
 	{
-		newSELL->station = station;
-		newSELL->prev = currentCell;
-		newSELL->next = nullptr;
+		strcpy_s(newCELL->station, 16, station);
+		newCELL->prev = currentCell;
+		newCELL->next = currentCell->next;
 	}
 
 	if (currentCell->next) {
 		CELL* nextCell = currentCell->next;
-		nextCell->prev = newSELL;
+		nextCell->prev = newCELL;
 	}
+
+	currentCell->next = newCELL;
 }
 
 //一覧を表示する関数のプロトタイプ宣言
 void index(CELL* endCell) {
 	int no = 1;
-	while (endCell != nullptr)
+	while (endCell->next != nullptr)
 	{
 		endCell = endCell->next;
-		printf("%d", no);
-		printf("%p", endCell->prev);
-		printf("%5d", endCell->station);
-		printf("(%p)", endCell);
-		printf("%p/n", endCell->next);
+		printf("%d\n", no);
+		printf("%p\n", endCell->prev);
+		printf("%s\n", endCell->station);
+		printf("(%p)\n", endCell);
+		printf("%p\n", endCell->next);
+		printf("\n");
 		no++;
 	}
 }
