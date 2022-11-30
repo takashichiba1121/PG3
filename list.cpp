@@ -87,3 +87,44 @@ void List::index() {
 		no++;*/
 	}
 }
+void List::print(int itr)
+{
+	int num = 0;
+	CELL* head = &this->head;
+	while (num<=itr)
+	{
+		num++;
+		head = head->next;
+	}
+	printf("%s\n",head->station);
+}
+int List::Get() {
+	int num = 0;
+	CELL* head = &this->head;
+	while (head->next!=nullptr)
+	{
+		num++;
+		head = head->next;
+	}
+	return num;
+}
+
+int fgets()
+{
+	char buffer[256];
+	size_t length;
+
+	printf("Input: ");
+	if (fgets(buffer, 256, stdin) == NULL) {
+		return 1;
+	}
+	length = strlen(buffer);
+	if (length > 0 && buffer[length - 1] == '\n') {
+		buffer[--length] = '\0';
+	}
+	int num = std::atoi(buffer);
+	printf("Output: %s\n", buffer);
+	printf("Length: %zu\n", length);
+	printf("num:%d\n", num);
+	return 0;
+}

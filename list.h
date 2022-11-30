@@ -23,6 +23,10 @@ public:
 	//一覧を表示する関数のプロトタイプ宣言
 	void index();
 
+	void print(int itr);
+
+	int Get();
+
 private:
 	CELL head;
 };
