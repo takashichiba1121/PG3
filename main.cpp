@@ -17,6 +17,8 @@ void CreateList(List* list);
 
 void DitList(List* list);
 
+void DeleteList(List* list);
+
 int fgetsInt();
 
 int main(void)
@@ -59,6 +61,7 @@ int main(void)
 			DitList(list);
 			break;
 		case Scene::Delete:
+
 			break;
 		default:
 			scene = Scene::final;
@@ -131,7 +134,7 @@ void PrintList(List* list)
 						std::cout << "ƒGƒ‰[" << endl;
 						cout << "•¶Žš‚ª“ü—Í‚³‚ê‚Ü‚µ‚½" << endl;
 					}
-					if (list->Get() < itr)
+					if (itr>list->Get()-1)
 					{
 						cout << "—v‘f”ˆÈã‚Ì”Ô†‚ª“ü—Í‚³‚ê‚Ü‚µ‚½" << endl;
 					}
@@ -194,7 +197,7 @@ void CreateList(List* list)
 		scanf_s("%s", newVal, 16);
 
 		int debug = list->Get();
-		if (itr < 0 || itr >= list->Get())
+		if (itr < 0 || itr > list->Get()-1)
 		{
 			list->push_back(newVal);
 			std::cout << "ÅŒã”ö‚É“ü—Í‚³‚ê‚Ü‚·B" << endl;
@@ -213,7 +216,7 @@ void CreateList(List* list)
 		char newVal[16];
 		scanf_s("%s", newVal, 16);
 		list->push_back(newVal);
-		std::cout << "—v‘f" << newVal << "‘}“ü‚³‚ê‚Ü‚µ‚½" << endl;
+		std::cout << "—v‘f\"" << newVal << "\"‘}“ü‚³‚ê‚Ü‚µ‚½" << endl;
 	}
 }
 
@@ -225,9 +228,9 @@ void DitList(List* list)
 	if (scanf_s("%d", &itr)==0)
 	{
 		std::cout << "ƒGƒ‰[" << "\n";
-		cout << itr << "•¶Žš‚ª“ü—Í‚³‚ê‚Ü‚µ‚½" << endl;
+		cout << "•¶Žš‚ª“ü—Í‚³‚ê‚Ü‚µ‚½" << endl;
 	}
-	else if (itr > list->Get() && itr <= 0)
+	else if (itr > list->Get()-1 || itr < 0)
 	{
 		cout << itr << "”Ô–Ú‚ÍŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½" << endl;
 	}
@@ -237,8 +240,28 @@ void DitList(List* list)
 		char newVal[16];
 		scanf_s("%s", newVal, 16);
 		list->Dit(itr, newVal);
-		std::cout << itr << "”Ô–Ú‚Ì—v‘f‚ª" << newVal << "‚É•ÏX‚³‚ê‚Ü‚µ‚½" << endl;
+		std::cout << itr << "”Ô–Ú‚Ì—v‘f‚ª\"" << newVal << "\"‚É•ÏX‚³‚ê‚Ü‚µ‚½" << endl;
 
+	}
+}
+
+void DeleteList(List* list)
+{
+	cout << "[—v‘f‚Ì—v‘f]" << endl;
+	cout << "íœ‚µ‚½‚¢—v‘f‚Ì”Ô†‚ðŽw’è‚µ‚Ä‚­‚¾‚³‚¢B" << endl;
+	int itr=0;
+	if (scanf_s("%d", &itr) == 0)
+	{
+		std::cout << "ƒGƒ‰[" << "\n";
+		cout << "•¶Žš‚ª“ü—Í‚³‚ê‚Ü‚µ‚½" << endl;
+	}
+	else if(itr>list->Get()-1)
+	{
+		cout << itr << "”Ô–Ú‚ÍŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½" << endl;
+	}
+	else
+	{
+		list->Delete(itr);
 	}
 }
 

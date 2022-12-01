@@ -60,7 +60,7 @@ void List::create(int itr, char* val)
 
 void List::Dit(int itr, char* val)
 {
-	CELL* currentCell = getInswrtCellAddress(itr);
+	CELL* currentCell = getInswrtCellAddress(itr+1);
 
 	strcpy_s(currentCell->val, 16, val);
 }
@@ -105,11 +105,9 @@ int List::Get() {
 
 void List::Delete(int itr)
 {
-	CELL* currentCell = getInswrtCellAddress(itr);
+	CELL* currentCell = getInswrtCellAddress(itr+1);
 
-	currentCell->prev->next=currentCell->next;
-
-	currentCell->next->prev =currentCell->prev;
+	cout <<itr << "”Ô–Ú‚Ì—v‘f\""<<currentCell->val <<"\"‚ðíœ‚µ‚Ü‚µ‚½" << endl;
 
 	free(currentCell);
 }
