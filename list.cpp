@@ -107,6 +107,17 @@ void List::Delete(int itr)
 {
 	CELL* currentCell = getInswrtCellAddress(itr+1);
 
+	if (currentCell->next == nullptr)
+	{
+		currentCell->prev->next = nullptr;
+	}
+	else
+	{
+		currentCell->prev->next = currentCell->next;
+
+		currentCell->next->prev = currentCell->prev;
+	}
+
 	cout <<itr << "”Ô–Ú‚Ì—v‘f\""<<currentCell->val <<"\"‚ðíœ‚µ‚Ü‚µ‚½" << endl;
 
 	free(currentCell);

@@ -61,7 +61,7 @@ int main(void)
 			DitList(list);
 			break;
 		case Scene::Delete:
-
+			DeleteList(list);
 			break;
 		default:
 			scene = Scene::final;
