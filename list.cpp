@@ -23,7 +23,7 @@ CELL* List::getInswrtCellAddress(int iterator) {
 }
 
 //データを追加する関数のプロトタイプ宣言
-void List::push_back(char* station)
+void List::push_back(char* val)
 {
 	CELL* head=&this->head;
 	while (head->next != nullptr) {
@@ -36,7 +36,7 @@ void List::push_back(char* station)
 
 	if (newSELL != NULL)
 	{
-		strcpy_s(newSELL->station, 16, station);
+		strcpy_s(newSELL->val, 16, val);
 		newSELL->prev = head;
 		newSELL->next = nullptr;
 	}
@@ -47,7 +47,7 @@ void List::push_back(char* station)
 }
 
 //データを追加する関数のプロトタイプ宣言
-void List::create(int itr, char* station)
+void List::create(int itr, char* val)
 {
 	CELL* currentCell = getInswrtCellAddress(itr);
 
@@ -58,7 +58,7 @@ void List::create(int itr, char* station)
 
 	if (newCELL != NULL)
 	{
-		strcpy_s(newCELL->station, 16, station);
+		strcpy_s(newCELL->val, 16,val);
 		newCELL->prev = currentCell;
 		newCELL->next = currentCell->next;
 	}
@@ -66,9 +66,17 @@ void List::create(int itr, char* station)
 	if (currentCell->next) {
 		CELL* nextCell = currentCell->next;
 		nextCell->prev = newCELL;
+		newCELL->next->prev = newCELL;
 	}
 
 	currentCell->next = newCELL;
+}
+
+void List::Dit(int itr, char* val)
+{
+	CELL* currentCell = getInswrtCellAddress(itr);
+
+	strcpy_s(currentCell->val, 16, val);
 }
 
 //一覧を表示する関数のプロトタイプ宣言
@@ -80,7 +88,7 @@ void List::index() {
 		endCell = endCell->next;
 	/*	printf("%d\n", no);
 		printf("%p\n", endCell->prev);*/
-		printf("%s\n", endCell->station);
+		printf("%s\n", endCell->val);
 		//printf("(%p)\n", endCell);
 		/*printf("%p\n", endCell->next);
 		printf("\n");
@@ -96,7 +104,7 @@ void List::print(int itr)
 		num++;
 		head = head->next;
 	}
-	printf("%s\n",head->station);
+	printf("%s\n",head->val);
 }
 int List::Get() {
 	int num = 0;
@@ -109,22 +117,13 @@ int List::Get() {
 	return num;
 }
 
-int fgets()
+void List::Delete(int itr)
 {
-	char buffer[256];
-	size_t length;
+	CELL* currentCell = getInswrtCellAddress(itr);
 
-	printf("Input: ");
-	if (fgets(buffer, 256, stdin) == NULL) {
-		return 1;
-	}
-	length = strlen(buffer);
-	if (length > 0 && buffer[length - 1] == '\n') {
-		buffer[--length] = '\0';
-	}
-	int num = std::atoi(buffer);
-	printf("Output: %s\n", buffer);
-	printf("Length: %zu\n", length);
-	printf("num:%d\n", num);
-	return 0;
+	currentCell->prev->next=currentCell->next;
+
+	currentCell->next->prev =currentCell->prev;
+
+	free(currentCell);
 }

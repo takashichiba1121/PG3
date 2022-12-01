@@ -10,7 +10,13 @@ enum class Scene
 	final
 };
 //要素の表示
-bool PrintList(List* list);
+void PrintList(List* list);
+
+void CreateList(List* list);
+
+void DitList(List* list);
+
+int fgetsInt();
 
 int main(void)
 {
@@ -21,8 +27,6 @@ int main(void)
 
 	Scene scene;
 	scene = Scene::Print;
-
-	int number = 0;
 	while (scene != Scene::final)
 	{
 		cout << "[要素の操作]" << endl;
@@ -48,8 +52,10 @@ int main(void)
 			PrintList(list);
 			break;
 		case Scene::Create:
+			CreateList(list);
 			break;
 		case Scene::Dit:
+			DitList(list);
 			break;
 		case Scene::Delete:
 			break;
@@ -62,7 +68,7 @@ int main(void)
 	delete list;
 	return 0;
 }
-bool PrintList(List* list)
+void PrintList(List* list)
 {
 	while (true) {
 		cout << "[要素の表示]" << endl;
@@ -74,8 +80,8 @@ bool PrintList(List* list)
 		int number = 0;
 		if (scanf_s("%d", &number) == 0)
 		{
-			std::cout << "エラー" << "\n";
-			return false;
+			std::cout << "エラー" << endl;
+			cout << "文字が入力されました" << endl;
 		}
 		else if (number == 1)
 		{
@@ -93,7 +99,7 @@ bool PrintList(List* list)
 			if (scanf_s("%d", &number) == 0)
 			{
 				std::cout << "エラー" << "\n";
-				return false;
+				cout << "文字が入力されました" << endl;
 			}
 			if (number==1)
 			{
@@ -106,7 +112,7 @@ bool PrintList(List* list)
 			else
 			{
 				std::cout << "エラー" << "\n";
-				return false;
+				cout << "指定していない数字が入りました" << endl;
 			}
 		}
 		else if (number == 2)
@@ -121,8 +127,8 @@ bool PrintList(List* list)
 
 					if (scanf_s("%d", &itr) == 0)
 					{
-						std::cout << "エラー" << "\n";
-						return false;
+						std::cout << "エラー" << endl;
+						cout << "文字が入力されました" << endl;
 					}
 					if (list->Get() < itr)
 					{
@@ -138,8 +144,8 @@ bool PrintList(List* list)
 
 				if (scanf_s("%d", &number) == 0)
 				{
-					std::cout << "エラー" << "\n";
-					return false;
+					std::cout << "エラー" << "endl";
+					cout << "文字が入力されました" << endl;
 				}
 				if (number == 1)
 				{
@@ -152,7 +158,7 @@ bool PrintList(List* list)
 				else
 				{
 					std::cout << "エラー" << "\n";
-					return false;
+					cout << "指定していない数字が入力されました" << endl;
 				}
 			}
 			else
@@ -169,8 +175,71 @@ bool PrintList(List* list)
 		else
 		{
 			std::cout << "エラー" << "\n";
-			return false;
+			cout << "文字が入力されました" << endl;
 		}
 	}
-	return true;
+}
+
+void CreateList(List* list)
+{
+	std::cout << "[リストの挿入]"<<endl;
+	std::cout << "要素を追加する場所を指定してください。最後尾に追加する場合は何も入力しないでください"<<endl<<"（文字および要素数よりも大きい値やマイナスの値を入れた場合も最後尾に追加します" << endl;
+	int itr=fgetsInt();
+
+	char newVal[16];
+	scanf_s("%s",newVal,16);
+
+
+	if (itr<=0&&itr>=list->Get())
+	{
+		std::cout << "エラー" << endl;
+		std::cout << "最後尾に入力されます。" << endl;
+		std::cout << "要素" << newVal << "が最後尾に挿入されました" << endl;
+	}
+	else
+	{
+		list->create(itr,newVal);
+		std::cout << "要素" << newVal << "が"<< itr<<"に挿入されました" << endl;
+	}
+}
+
+void DitList(List* list)
+{
+	cout << "[要素の編集]" << endl;
+	cout << "編集したい要素の番号を入力してください" << endl;
+	int itr=0;
+	if (scanf_s("%d", &itr))
+	{
+		std::cout << "エラー" << "\n";
+		cout << itr << "文字が入力されました" << endl;
+	}
+	else if(itr>list->Get()&&itr<=0)
+	{
+		cout << itr << "番目は見つかりませんでした" << endl;
+	}
+	else
+	{
+		cout << itr << "番目の変更する値を入力してください" << endl;
+		char* newVal=nullptr;
+		scanf_s("%s", newVal,16);
+		list->Dit(itr,newVal);
+		std::cout << itr  << "番目の要素が" << newVal << "に変更されました" << endl;
+
+	}
+}
+
+int fgetsInt()
+{
+	char buffer[256];
+	int length;
+
+	if (fgets(buffer, 256, stdin) == NULL) {
+		return 1;
+	}
+	length = strlen(buffer);
+	if (length > 0 && buffer[length - 1] == '\n') {
+		buffer[--length] = '\0';
+	}
+	int num = std::atoi(buffer);
+	return num;
 }
