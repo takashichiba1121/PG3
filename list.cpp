@@ -4,13 +4,14 @@
 
 List::List()
 {
+	strcpy_s(head.val, 16, "aaa");
 	head.next = nullptr;
 	head.prev = nullptr;
 }
 
-CELL* List::getInswrtCellAddress(int iterator) {
+CELL *List::getInswrtCellAddress(int iterator) {
 	CELL* endCELL = &head;
-	for (int i = -0; i < iterator; i++)
+	for (int i = 0; i < iterator; i++)
 	{
 		if (endCELL->next) {
 			endCELL = endCELL->next;
@@ -25,25 +26,7 @@ CELL* List::getInswrtCellAddress(int iterator) {
 //データを追加する関数のプロトタイプ宣言
 void List::push_back(char* val)
 {
-	CELL* head=&this->head;
-	while (head->next != nullptr) {
-		head = head->next;
-	}
-	CELL* newSELL = nullptr;
-
-	//新規作成するセル分のメモリを確保する
-	newSELL = (CELL*)malloc(sizeof(CELL));
-
-	if (newSELL != NULL)
-	{
-		strcpy_s(newSELL->val, 16, val);
-		newSELL->prev = head;
-		newSELL->next = nullptr;
-	}
-
-	//最後(最新)のセルのアドレスの一つ目の処理は引数から持ってきた
-	//リストのうち最初のセルのアドレスが該当する
-	head->next = newSELL;
+	create(Get(),val);
 }
 
 //データを追加する関数のプロトタイプ宣言
@@ -66,7 +49,10 @@ void List::create(int itr, char* val)
 	if (currentCell->next) {
 		CELL* nextCell = currentCell->next;
 		nextCell->prev = newCELL;
-		newCELL->next->prev = newCELL;
+		if (newCELL != NULL)
+		{
+			newCELL->next->prev = newCELL;
+		}
 	}
 
 	currentCell->next = newCELL;
@@ -81,25 +67,25 @@ void List::Dit(int itr, char* val)
 
 //一覧を表示する関数のプロトタイプ宣言
 void List::index() {
-	int no = 1;
+	int no = 0;
 	CELL* endCell = &head;
 	while (endCell->next != nullptr)
 	{
 		endCell = endCell->next;
 	/*	printf("%d\n", no);
 		printf("%p\n", endCell->prev);*/
-		printf("%s\n", endCell->val);
+		printf("%d:\"%s\",\n",no, endCell->val);
 		//printf("(%p)\n", endCell);
 		/*printf("%p\n", endCell->next);
-		printf("\n");
-		no++;*/
+		printf("\n");*/
+		no++;
 	}
 }
 void List::print(int itr)
 {
 	int num = 0;
 	CELL* head = &this->head;
-	while (num<=itr)
+	while (num<itr)
 	{
 		num++;
 		head = head->next;

@@ -33,4 +33,5 @@ public:
 
 private:
 	CELL head;
+	
 };
