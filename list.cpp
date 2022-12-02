@@ -26,13 +26,13 @@ CELL *List::getInswrtCellAddress(int iterator) {
 //データを追加する関数のプロトタイプ宣言
 void List::push_back(char* val)
 {
-	create(Get(),val);
+	create(Size(),val);
 }
 
 //データを追加する関数のプロトタイプ宣言
 void List::create(int itr, char* val)
 {
-	CELL* currentCell = getInswrtCellAddress(itr);
+	CELL* iteratorCell = getInswrtCellAddress(itr);
 
 	CELL* newCELL = nullptr;
 
@@ -42,12 +42,12 @@ void List::create(int itr, char* val)
 	if (newCELL != NULL)
 	{
 		strcpy_s(newCELL->val, 16,val);
-		newCELL->prev = currentCell;
-		newCELL->next = currentCell->next;
+		newCELL->prev = iteratorCell;
+		newCELL->next = iteratorCell->next;
 	}
 
-	if (currentCell->next) {
-		CELL* nextCell = currentCell->next;
+	if (iteratorCell->next) {
+		CELL* nextCell = iteratorCell->next;
 		nextCell->prev = newCELL;
 		if (newCELL != NULL)
 		{
@@ -55,14 +55,14 @@ void List::create(int itr, char* val)
 		}
 	}
 
-	currentCell->next = newCELL;
+	iteratorCell->next = newCELL;
 }
 
 void List::Dit(int itr, char* val)
 {
-	CELL* currentCell = getInswrtCellAddress(itr+1);
+	CELL* iteratorCell = getInswrtCellAddress(itr+1);
 
-	strcpy_s(currentCell->val, 16, val);
+	strcpy_s(iteratorCell->val, 16, val);
 }
 
 //一覧を表示する関数のプロトタイプ宣言
@@ -84,15 +84,10 @@ void List::index() {
 void List::print(int itr)
 {
 	int num = 0;
-	CELL* head = &this->head;
-	while (num<itr)
-	{
-		num++;
-		head = head->next;
-	}
-	printf("%s\n",head->val);
+	CELL* iteratorCell = getInswrtCellAddress(itr + 1);
+	printf("%s\n", iteratorCell->val);
 }
-int List::Get() {
+int List::Size() {
 	int num = 0;
 	CELL* head = &this->head;
 	while (head->next!=nullptr)
@@ -105,20 +100,20 @@ int List::Get() {
 
 void List::Delete(int itr)
 {
-	CELL* currentCell = getInswrtCellAddress(itr+1);
+	CELL* iteratorCell = getInswrtCellAddress(itr+1);
 
-	if (currentCell->next == nullptr)
+	if (iteratorCell->next == nullptr)
 	{
-		currentCell->prev->next = nullptr;
+		iteratorCell->prev->next = nullptr;
 	}
 	else
 	{
-		currentCell->prev->next = currentCell->next;
+		iteratorCell->prev->next = iteratorCell->next;
 
-		currentCell->next->prev = currentCell->prev;
+		iteratorCell->next->prev = iteratorCell->prev;
 	}
 
-	cout <<itr << "番目の要素\""<<currentCell->val <<"\"を削除しました" << endl;
+	cout <<itr << "番目の要素\""<<iteratorCell->val <<"\"を削除しました" << endl;
 
-	free(currentCell);
+	free(iteratorCell);
 }

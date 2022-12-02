@@ -23,7 +23,6 @@ int fgetsInt();
 
 int main(void)
 {
-	char station[16];
 	//先頭セルの宣言
 	List* list;
 	list = new List();
@@ -35,14 +34,14 @@ int main(void)
 		cout << "[要素の操作]" << endl;
 		cout << "1.要素の表示" << endl;
 		cout << "2.要素の挿入" << endl;
-		if (list->Get() != 0)
+		if (list->Size() != 0)
 		{
 			cout << "3.要素の編集" << endl;
 			cout << "4.要素の削除" << endl;
 		}
 		cout << endl;
 		cout << "-----------------------------" << endl;
-		cout << "操作を選択してください(上の番号以外および文字を入れた場合は即実行終了します)" << endl;
+		cout << "操作を選択してください" << endl;
 		if (scanf_s("%d", &scene) == 0)
 		{
 			std::cout << "エラー" << "\n";
@@ -80,7 +79,7 @@ void PrintList(List* list)
 		cout << "2.順番を指定して要素を表示" << endl;
 		cout << "9.要素操作に戻る" << endl;
 		cout << endl;
-		cout << "操作を選択してください(上の番号以外および文字を入れた場合は即実行終了します)" << endl;
+		cout << "操作を選択してください" << endl;
 		int number = 0;
 		if (scanf_s("%d", &number) == 0)
 		{
@@ -95,7 +94,7 @@ void PrintList(List* list)
 			cout << "}" << endl;
 			cout << endl;
 			cout << "要素数:";
-			cout << list->Get() << endl;
+			cout << list->Size() << endl;
 			cout << endl;
 			cout << "-----------------------------" << endl;
 			cout << "1.要素の表示に戻る" << endl;
@@ -121,7 +120,7 @@ void PrintList(List* list)
 		}
 		else if (number == 2)
 		{
-			if (list->Get() > 0)
+			if (list->Size() > 0)
 			{
 				int itr = 0;
 				cout << "[順番を指定して要素を表示]" << endl;
@@ -134,11 +133,11 @@ void PrintList(List* list)
 						std::cout << "エラー" << endl;
 						cout << "文字が入力されました" << endl;
 					}
-					if (itr>list->Get()-1)
+					if (itr>list->Size()-1)
 					{
 						cout << "要素数以上の番号が入力されました" << endl;
 					}
-				} while (list->Get() < itr);
+				} while (list->Size() < itr);
 
 				list->print(itr);
 
@@ -187,17 +186,17 @@ void PrintList(List* list)
 void CreateList(List* list)
 {
 	std::cout << "[リストの挿入]" << endl;
-	if (list->Get() > 0)
+	if (list->Size() > 0)
 	{
-		std::cout << "要素を追加する場所を指定してください。最後尾に追加する場合は何も入力しないでください" << endl << "（文字および要素数よりも大きい値やマイナスの値を入れた場合も最後尾に追加します" << endl;
+		std::cout << "要素を追加する場所を指定してください。最後尾に追加する場合は何も入力しないでください" << endl;
 		int itr = fgetsInt();
 
-		cout << "挿入する値を入れてください" << endl;
+		cout << "追加する値を入れてください" << endl;
 		char newVal[16];
 		scanf_s("%s", newVal, 16);
 
-		int debug = list->Get();
-		if (itr < 0 || itr > list->Get()-1)
+		int debug = list->Size();
+		if (itr < 0)
 		{
 			list->push_back(newVal);
 			std::cout << "最後尾に入力されます。" << endl;
@@ -205,8 +204,16 @@ void CreateList(List* list)
 		}
 		else
 		{
+			if (itr>=list->Size())
+			{
+				std::cout << itr << "が要素数以上なので最後尾に入ります" << endl;
+				std::cout << "要素" << newVal << "が最後尾に挿入されました" << endl;
+			}
+			else
+			{
+				std::cout << "要素" << newVal << "が" << itr << "番に挿入されました" << endl;
+			}
 			list->create(itr, newVal);
-			std::cout << "要素" << newVal << "が" << itr << "に挿入されました" << endl;
 		}
 	}
 	else
@@ -230,7 +237,7 @@ void DitList(List* list)
 		std::cout << "エラー" << "\n";
 		cout << "文字が入力されました" << endl;
 	}
-	else if (itr > list->Get()-1 || itr < 0)
+	else if (itr > list->Size()-1 || itr < 0)
 	{
 		cout << itr << "番目は見つかりませんでした" << endl;
 	}
@@ -255,7 +262,7 @@ void DeleteList(List* list)
 		std::cout << "エラー" << "\n";
 		cout << "文字が入力されました" << endl;
 	}
-	else if(itr>list->Get()-1)
+	else if(itr>list->Size()-1)
 	{
 		cout << itr << "番目は見つかりませんでした" << endl;
 	}
@@ -278,7 +285,18 @@ int fgetsInt()
 	}
 	else
 	{
-		num = std::atoi(insertNum.c_str());
+		if (insertNum == "0")
+		{
+			num = 0;
+		}
+		else
+		{
+			num = std::atoi(insertNum.c_str());
+			if (num == 0)
+			{
+				num = -1;
+			}
+		}
 	}
 	return num;
 }

@@ -27,7 +27,7 @@ public:
 
 	void print(int itr);
 
-	int Get();
+	int Size();
 
 	void Delete(int itr);
 
