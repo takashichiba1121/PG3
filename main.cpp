@@ -1,126 +1,63 @@
-#include<iostream>
+#include<stdio.h>
+#include<Windows.h>
+#include<time.h>
 #include<stdlib.h>
-
-using namespace std;
-
-//単方向リストの構造体の定義
-typedef struct CELL {
-	char station[16];
-	struct CELL* prev;
-	struct CELL* next;
-}CELL;
-
-//挿入したいセルのアドレスを取得
-CELL* getInswrtCellAddress(CELL* endCELL, int iterator);
-//データを末尾に追加する関数のプロトタイプ宣言
-void push_back(CELL* front, char* station);
-
-//データを指定したセルに追加する関数のプロトタイプ宣言
-void create(CELL* front, char* station);
-
-//一覧を表示する関数のプロトタイプ宣言
-void index(CELL* front);
+#include<functional>
 
 int main(void)
 {
-	char station[16];
-	//先頭セルの宣言
-	CELL head;
-	strcpy_s(head.station, 16, "toukyou");
-	head.next = nullptr;
-	head.prev = nullptr;
-	int iterator;
-	/*scanf_s("%d", &iterator);
+	int input;
+	//入力
+	printf("奇数だったら1を\n偶数だったら0を\n入力してください\n");
+	scanf_s("%d", &input);
 
-	CELL* insertCell = getInswrtCellAddress(&head, iterator);*/
+	//コールバック関数1(ラムダ式版)
+	std::function<void(int)> answer = [](int input) {
 
-	////最後尾にセルを追加
-	//create(insertCell, station);
-	for (int i = 0; i < 5; i++)
-	{
-		scanf_s("%s", station, 16);
-		push_back(&head, station);
+		const int oddNumber = 1;
+		const int evenNumber = 2;
+		srand(time(NULL));
+		int random = rand();
+
+		if (input == oddNumber)
+		{
+			if (random % 2 == 0)
+			{
+				printf("不正解");
+			}
+			else if (random % 2 == 1)
+			{
+				printf("正解");
+			}
+		}
+		else if (input == evenNumber)
+		{
+			if (random % 2 == 0)
+			{
+				printf("正解");
+			}
+			else if (random % 2 == 1)
+			{
+				printf("不正解");
+			}
+		}
+	};
+
+
+	std::function<void(std::function<void(int)>, int)>setTimeout = [=](std::function<void(int)> answer, int time) {
+		Sleep(time * 1000);
+		answer(input);
+
+	};
+
+	//入力の値が1か0だったら判定へそれ以外だったらエラー文だして終了
+	if (input == 1 || input == 0) {
+		setTimeout(answer, 3);
 	}
-	CELL* insertCell = getInswrtCellAddress(&head, 3);
-	scanf_s("%s", station, 16);
-	create(insertCell,station);
-	//リスト一覧の表示
-	index(&head);
+	else {
+		printf("1か0を入力してください");
+	}
 
+	system("pause");
 	return 0;
-}
-
-CELL* getInswrtCellAddress(CELL* endCELL, int iterator) {
-	for (int i = -0; i < iterator; i++)
-	{
-		if (endCELL->next) {
-			endCELL = endCELL->next;
-		}
-		else {
-			break;
-		}
-	}
-	return endCELL;
-}
-
-//データを追加する関数のプロトタイプ宣言
-void push_back(CELL* head, char* station)
-{
-	while (head->next != nullptr) {
-		head = head->next;
-	}
-	CELL* newSELL = nullptr;
-
-	//新規作成するセル分のメモリを確保する
-	newSELL = (CELL*)malloc(sizeof(CELL));
-
-	if (newSELL != NULL)
-	{
-		strcpy_s(newSELL->station, 16, station);
-		newSELL->prev = head;
-		newSELL->next = nullptr;
-	}
-
-	//最後(最新)のセルのアドレスの一つ目の処理は引数から持ってきた
-	//リストのうち最初のセルのアドレスが該当する
-	head->next = newSELL;
-}
-
-//データを追加する関数のプロトタイプ宣言
-void create(CELL* currentCell, char* station)
-{
-	CELL* newCELL = nullptr;
-
-	//新規作成するセル分のメモリを確保する
-	newCELL = (CELL*)malloc(sizeof(CELL));
-
-	if (newCELL != NULL)
-	{
-		strcpy_s(newCELL->station, 16, station);
-		newCELL->prev = currentCell;
-		newCELL->next = currentCell->next;
-	}
-
-	if (currentCell->next) {
-		CELL* nextCell = currentCell->next;
-		nextCell->prev = newCELL;
-	}
-
-	currentCell->next = newCELL;
-}
-
-//一覧を表示する関数のプロトタイプ宣言
-void index(CELL* endCell) {
-	int no = 1;
-	while (endCell->next != nullptr)
-	{
-		endCell = endCell->next;
-		printf("%d\n", no);
-		printf("%p\n", endCell->prev);
-		printf("%s\n", endCell->station);
-		printf("(%p)\n", endCell);
-		printf("%p\n", endCell->next);
-		printf("\n");
-		no++;
-	}
 }
