@@ -4,6 +4,40 @@
 #include<stdlib.h>
 #include<functional>
 
+typedef void(*PFunc)(int);
+
+//コールバック関数1(ラムダ式版)
+PFunc answer = [](int input) {
+
+	const int oddNumber = 1;
+	const int evenNumber = 2;
+	srand(time(NULL));
+	int random = rand();
+
+	if (input == oddNumber)
+	{
+		if (random % 2 == 0)
+		{
+			printf("不正解\n");
+		}
+		else if (random % 2 == 1)
+		{
+			printf("正解\n");
+		}
+	}
+	else if (input == evenNumber)
+	{
+		if (random % 2 == 0)
+		{
+			printf("正解\n");
+		}
+		else if (random % 2 == 1)
+		{
+			printf("不正解\n");
+		}
+	}
+};
+
 int main(void)
 {
 	int input;
@@ -11,40 +45,8 @@ int main(void)
 	printf("奇数だったら1を\n偶数だったら0を\n入力してください\n");
 	scanf_s("%d", &input);
 
-	//コールバック関数1(ラムダ式版)
-	std::function<void(int)> answer = [](int input) {
 
-		const int oddNumber = 1;
-		const int evenNumber = 2;
-		srand(time(NULL));
-		int random = rand();
-
-		if (input == oddNumber)
-		{
-			if (random % 2 == 0)
-			{
-				printf("不正解\n");
-			}
-			else if (random % 2 == 1)
-			{
-				printf("正解\n");
-			}
-		}
-		else if (input == evenNumber)
-		{
-			if (random % 2 == 0)
-			{
-				printf("正解\n");
-			}
-			else if (random % 2 == 1)
-			{
-				printf("不正解\n");
-			}
-		}
-	};
-
-
-	std::function<void(std::function<void(int)>,int)>setTimeout = [=](std::function<void(int)> answer,int time) {
+	std::function<void(PFunc,int)>setTimeout = [=](PFunc answer,int time) {
 		Sleep(time * 1000);
 		answer(input);
 
