@@ -23,28 +23,28 @@ int main(void)
 		{
 			if (random % 2 == 0)
 			{
-				printf("不正解");
+				printf("不正解\n");
 			}
 			else if (random % 2 == 1)
 			{
-				printf("正解");
+				printf("正解\n");
 			}
 		}
 		else if (input == evenNumber)
 		{
 			if (random % 2 == 0)
 			{
-				printf("正解");
+				printf("正解\n");
 			}
 			else if (random % 2 == 1)
 			{
-				printf("不正解");
+				printf("不正解\n");
 			}
 		}
 	};
 
 
-	std::function<void(std::function<void(int)>, int)>setTimeout = [=](std::function<void(int)> answer, int time) {
+	std::function<void(int)>setTimeout = [=](int time) {
 		Sleep(time * 1000);
 		answer(input);
 
@@ -52,7 +52,7 @@ int main(void)
 
 	//入力の値が1か0だったら判定へそれ以外だったらエラー文だして終了
 	if (input == 1 || input == 0) {
-		setTimeout(answer, 3);
+		setTimeout(3);
 	}
 	else {
 		printf("1か0を入力してください");
