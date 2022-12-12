@@ -1,4 +1,5 @@
 #include "DxLib.h"
+#include"SceneManager.h"
 
 // ウィンドウのタイトルに表示する文字列
 const char TITLE[] = "LC1B_16_チバタカシ: タイトル";
@@ -40,7 +41,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 
 	// ゲームループで使う変数の宣言
+	SceneManager* sceneManager = SceneManager::GetInstance();
 
+	int sceneNo = 0;
 
 	// 最新のキーボード情報用
 	char keys[256] = {0};
@@ -63,10 +66,30 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//---------  ここからプログラムを記述  ----------//
 
 		// 更新処理
+		if (keys[KEY_INPUT_SPACE]&&oldkeys[KEY_INPUT_SPACE]==false)
+		{
+			sceneNo++;
+			if (sceneNo>2)
+			{
+				sceneNo = 0;
+			}
 
+			sceneManager->ChangeScene(sceneNo);
+		}
 
 		// 描画処理
-
+		if (sceneManager->GetSceneNo() == 0)
+		{
+			DrawBox(0,0,600,400,GetColor(255,100,100), true);
+		}
+		else if (sceneManager->GetSceneNo() == 1)
+		{
+			DrawBox(0, 0, 600, 400, GetColor(100, 255, 100), true);
+		}else
+		{
+			DrawBox(0, 0, 600, 400, GetColor(100, 100, 255), true);
+		}
+		DrawFormatString(100,100,GetColor(255,255,255), "SceneNo: %d\nPress Space to Scene Change",sceneManager->GetSceneNo());
 		//---------  ここまでにプログラムを記述  ---------//
 		// (ダブルバッファ)裏面
 		ScreenFlip();
