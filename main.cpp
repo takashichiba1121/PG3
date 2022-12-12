@@ -1,126 +1,92 @@
-#include<iostream>
-#include<stdlib.h>
+#include "DxLib.h"
 
-using namespace std;
+// ウィンドウのタイトルに表示する文字列
+const char TITLE[] = "LC1B_16_チバタカシ: タイトル";
 
-//単方向リストの構造体の定義
-typedef struct CELL {
-	char station[16];
-	struct CELL* prev;
-	struct CELL* next;
-}CELL;
+// ウィンドウ横幅
+const int WIN_WIDTH = 600;
 
-//挿入したいセルのアドレスを取得
-CELL* getInswrtCellAddress(CELL* endCELL, int iterator);
-//データを末尾に追加する関数のプロトタイプ宣言
-void push_back(CELL* front, char* station);
+// ウィンドウ縦幅
+const int WIN_HEIGHT = 400;
 
-//データを指定したセルに追加する関数のプロトタイプ宣言
-void create(CELL* front, char* station);
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine,
+                   _In_ int nCmdShow) {
+	// ウィンドウモードに設定
+	ChangeWindowMode(TRUE);
 
-//一覧を表示する関数のプロトタイプ宣言
-void index(CELL* front);
+	// ウィンドウサイズを手動では変更させず、
+	// かつウィンドウサイズに合わせて拡大できないようにする
+	SetWindowSizeChangeEnableFlag(FALSE, FALSE);
 
-int main(void)
-{
-	char station[16];
-	//先頭セルの宣言
-	CELL head;
-	strcpy_s(head.station, 16, "toukyou");
-	head.next = nullptr;
-	head.prev = nullptr;
-	int iterator;
-	/*scanf_s("%d", &iterator);
+	// タイトルを変更
+	SetMainWindowText(TITLE);
 
-	CELL* insertCell = getInswrtCellAddress(&head, iterator);*/
+	// 画面サイズの最大サイズ、カラービット数を設定(モニターの解像度に合わせる)
+	SetGraphMode(WIN_WIDTH, WIN_HEIGHT, 32);
 
-	////最後尾にセルを追加
-	//create(insertCell, station);
-	for (int i = 0; i < 5; i++)
-	{
-		scanf_s("%s", station, 16);
-		push_back(&head, station);
-	}
-	CELL* insertCell = getInswrtCellAddress(&head, 3);
-	scanf_s("%s", station, 16);
-	create(insertCell,station);
-	//リスト一覧の表示
-	index(&head);
+	// 画面サイズを設定(解像度との比率で設定)
+	SetWindowSizeExtendRate(1.0);
 
-	return 0;
-}
+	// 画面の背景色を設定する
+	SetBackgroundColor(0x00, 0x00, 0x00);
 
-CELL* getInswrtCellAddress(CELL* endCELL, int iterator) {
-	for (int i = -0; i < iterator; i++)
-	{
-		if (endCELL->next) {
-			endCELL = endCELL->next;
+	// DXlibの初期化
+	if (DxLib_Init() == -1) { return -1; }
+
+	// (ダブルバッファ)描画先グラフィック領域は裏面を指定
+	SetDrawScreen(DX_SCREEN_BACK);
+
+	// 画像などのリソースデータの変数宣言と読み込み
+
+
+	// ゲームループで使う変数の宣言
+
+
+	// 最新のキーボード情報用
+	char keys[256] = {0};
+
+	// 1ループ(フレーム)前のキーボード情報
+	char oldkeys[256] = {0};
+
+	// ゲームループ
+	while (true) {
+		// 最新のキーボード情報だったものは1フレーム前のキーボード情報として保存
+		for (int i=0;i<255;i++)
+		{
+			oldkeys[i] = keys[i];
 		}
-		else {
+		// 最新のキーボード情報を取得
+		GetHitKeyStateAll(keys);
+
+		// 画面クリア
+		ClearDrawScreen();
+		//---------  ここからプログラムを記述  ----------//
+
+		// 更新処理
+
+
+		// 描画処理
+
+		//---------  ここまでにプログラムを記述  ---------//
+		// (ダブルバッファ)裏面
+		ScreenFlip();
+
+		// 20ミリ秒待機(疑似60FPS)
+		WaitTimer(20);
+
+		// Windowsシステムからくる情報を処理する
+		if (ProcessMessage() == -1) {
+			break;
+		}
+
+		// ESCキーが押されたらループから抜ける
+		if (CheckHitKey(KEY_INPUT_ESCAPE) == 1) {
 			break;
 		}
 	}
-	return endCELL;
-}
+	// Dxライブラリ終了処理
+	DxLib_End();
 
-//データを追加する関数のプロトタイプ宣言
-void push_back(CELL* head, char* station)
-{
-	while (head->next != nullptr) {
-		head = head->next;
-	}
-	CELL* newSELL = nullptr;
-
-	//新規作成するセル分のメモリを確保する
-	newSELL = (CELL*)malloc(sizeof(CELL));
-
-	if (newSELL != NULL)
-	{
-		strcpy_s(newSELL->station, 16, station);
-		newSELL->prev = head;
-		newSELL->next = nullptr;
-	}
-
-	//最後(最新)のセルのアドレスの一つ目の処理は引数から持ってきた
-	//リストのうち最初のセルのアドレスが該当する
-	head->next = newSELL;
-}
-
-//データを追加する関数のプロトタイプ宣言
-void create(CELL* currentCell, char* station)
-{
-	CELL* newCELL = nullptr;
-
-	//新規作成するセル分のメモリを確保する
-	newCELL = (CELL*)malloc(sizeof(CELL));
-
-	if (newCELL != NULL)
-	{
-		strcpy_s(newCELL->station, 16, station);
-		newCELL->prev = currentCell;
-		newCELL->next = currentCell->next;
-	}
-
-	if (currentCell->next) {
-		CELL* nextCell = currentCell->next;
-		nextCell->prev = newCELL;
-	}
-
-	currentCell->next = newCELL;
-}
-
-//一覧を表示する関数のプロトタイプ宣言
-void index(CELL* endCell) {
-	int no = 1;
-	while (endCell->next != nullptr)
-	{
-		endCell = endCell->next;
-		printf("%d\n", no);
-		printf("%p\n", endCell->prev);
-		printf("%s\n", endCell->station);
-		printf("(%p)\n", endCell);
-		printf("%p\n", endCell->next);
-		printf("\n");
-		no++;
-	}
+	// 正常終了
+	return 0;
 }
