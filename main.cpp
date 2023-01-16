@@ -1,5 +1,5 @@
 #include "DxLib.h"
-#include"SceneManager.h"
+#include"Enemy.h"
 
 // ウィンドウのタイトルに表示する文字列
 const char TITLE[] = "LC1B_16_チバタカシ: タイトル";
@@ -39,11 +39,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	// 画像などのリソースデータの変数宣言と読み込み
 
+	Enemy* enemy[5];
 
-	// ゲームループで使う変数の宣言
-	SceneManager* sceneManager = SceneManager::GetInstance();
+	for (int i=0;i<5;i++)
+	{
+		enemy[i] = new Enemy(i*50,i*50,50,50);
+	}
 
-	int sceneNo = 0;
+	int playerX=300;
+
+	int playerY=300;
 
 	// 最新のキーボード情報用
 	char keys[256] = {0};
@@ -66,30 +71,39 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//---------  ここからプログラムを記述  ----------//
 
 		// 更新処理
-		if (keys[KEY_INPUT_SPACE]&&oldkeys[KEY_INPUT_SPACE]==false)
+		if (keys[KEY_INPUT_W])
 		{
-			sceneNo++;
-			if (sceneNo>2)
-			{
-				sceneNo = 0;
-			}
+			playerY--;
+		}
+		if (keys[KEY_INPUT_A])
+		{
+			playerX--;
+		}
+		if (keys[KEY_INPUT_S])
+		{
+			playerY++;
+		}
+		if (keys[KEY_INPUT_D])
+		{
+			playerX++;
+		}
 
-			sceneManager->ChangeScene(sceneNo);
+		for (int i = 0; i < 5; i++)
+		{
+			enemy[i]->CheckCollision(playerX,playerY,10,10);
 		}
 
 		// 描画処理
-		if (sceneManager->GetSceneNo() == 0)
+		if (Enemy::isDead==false)
 		{
-			DrawBox(0,0,600,400,GetColor(255,100,100), true);
+
+			for (int i = 0; i < 5; i++)
+			{
+				enemy[i]->Draw();
+			}
 		}
-		else if (sceneManager->GetSceneNo() == 1)
-		{
-			DrawBox(0, 0, 600, 400, GetColor(100, 255, 100), true);
-		}else
-		{
-			DrawBox(0, 0, 600, 400, GetColor(100, 100, 255), true);
-		}
-		DrawFormatString(100,100,GetColor(255,255,255), "SceneNo: %d\nPress Space to Scene Change",sceneManager->GetSceneNo());
+		DrawBox(playerX,playerY,playerX+10,playerY+10,GetColor(255,0,0),true);
+		
 		//---------  ここまでにプログラムを記述  ---------//
 		// (ダブルバッファ)裏面
 		ScreenFlip();
@@ -109,6 +123,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	}
 	// Dxライブラリ終了処理
 	DxLib_End();
+
+	for (int i = 0; i < 5; i++)
+	{
+		delete enemy[i];
+
+	}
 
 	// 正常終了
 	return 0;
