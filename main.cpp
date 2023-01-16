@@ -94,7 +94,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 
 		// •`‰æˆ—
-		if (Enemy::isDead==false)
+		if (Enemy::isAlive==false)
 		{
 
 			for (int i = 0; i < 5; i++)

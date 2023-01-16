@@ -10,7 +10,7 @@ public:
 
 	void Draw();
 
-	static bool isDead;
+	static bool isAlive;
 
 private:
 	int x;

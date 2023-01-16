@@ -1,7 +1,7 @@
 #include "Enemy.h"
 #include "DxLib.h"
 
-bool Enemy::isDead=false;
+bool Enemy::isAlive=false;
 
 Enemy::Enemy(int x, int y, int sizeX, int sizeY)
 {
@@ -13,7 +13,7 @@ Enemy::Enemy(int x, int y, int sizeX, int sizeY)
 
 void Enemy::OnCollision()
 {
-	isDead = true;
+	isAlive = true;
 }
 
 void Enemy::CheckCollision(int x, int y, int sizeX, int sizeY)
