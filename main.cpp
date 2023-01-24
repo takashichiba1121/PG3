@@ -39,16 +39,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	// 画像などのリソースデータの変数宣言と読み込み
 
-	Enemy* enemy[5];
+	Enemy* enemy;
 
-	for (int i=0;i<5;i++)
-	{
-		enemy[i] = new Enemy(i*50,i*50,50,50);
-	}
-
-	int playerX=300;
-
-	int playerY=300;
+	enemy = new Enemy(300,0,50,50);
 
 	// 最新のキーボード情報用
 	char keys[256] = {0};
@@ -71,38 +64,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//---------  ここからプログラムを記述  ----------//
 
 		// 更新処理
-		if (keys[KEY_INPUT_W])
-		{
-			playerY--;
-		}
-		if (keys[KEY_INPUT_A])
-		{
-			playerX--;
-		}
-		if (keys[KEY_INPUT_S])
-		{
-			playerY++;
-		}
-		if (keys[KEY_INPUT_D])
-		{
-			playerX++;
-		}
+		enemy->Update();
 
-		for (int i = 0; i < 5; i++)
-		{
-			enemy[i]->CheckCollision(playerX,playerY,10,10);
-		}
 
 		// 描画処理
-		if (Enemy::isDead==false)
-		{
-
-			for (int i = 0; i < 5; i++)
-			{
-				enemy[i]->Draw();
-			}
-		}
-		DrawBox(playerX,playerY,playerX+10,playerY+10,GetColor(255,0,0),true);
+		enemy->Draw();
 		
 		//---------  ここまでにプログラムを記述  ---------//
 		// (ダブルバッファ)裏面
@@ -124,11 +90,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	// Dxライブラリ終了処理
 	DxLib_End();
 
-	for (int i = 0; i < 5; i++)
-	{
-		delete enemy[i];
+	delete enemy;
 
-	}
 
 	// 正常終了
 	return 0;
